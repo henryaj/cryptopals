@@ -1,11 +1,32 @@
 package encode
 
 import (
-	"encoding/hex"
 	"encoding/base64"
+	"encoding/hex"
 )
 
 const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func HammingDistance(input1, input2 string) int {
+	var count int
+	xor := FixedXOR([]byte(input1), []byte(input2))
+	for _, byte := range xor {
+		count += GetNumSetBits(int(byte))
+	}
+
+	return count
+}
+
+func GetNumSetBits(input int) int {
+	var count int
+
+	for input > 0 {
+		count += input & 1
+		input >>= 1
+	}
+
+	return count
+}
 
 func HexStringToBytes(input string) []byte {
 	b, err := hex.DecodeString(input)

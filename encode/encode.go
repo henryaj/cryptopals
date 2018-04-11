@@ -52,12 +52,12 @@ func SingleByteXOR(input []byte) [][]byte {
 }
 
 func RepeatingKeyXOR(input, key []byte) []byte {
-	result  := make([]byte, len(input))
+	result := make([]byte, len(input))
 	var keyPointer int
 
 	for i := range input {
 		result[i] = input[i] ^ key[keyPointer]
-		if keyPointer < (len(key)-1) {
+		if keyPointer < (len(key) - 1) {
 			keyPointer++
 		} else {
 			keyPointer = 0
@@ -66,4 +66,3 @@ func RepeatingKeyXOR(input, key []byte) []byte {
 
 	return result
 }
-

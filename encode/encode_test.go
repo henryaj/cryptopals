@@ -4,6 +4,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"io/ioutil"
+
 	. "github.com/henryaj/cryptopals/encode"
 )
 
@@ -31,10 +33,10 @@ var _ = Describe("RepeatingKeyXOR", func() {
 	It("applies each byte of the key sequentially", func() {
 		input := `Burning 'em, if you ain't quick and nimble
 I go crazy when I hear a cymbal`
-		expected := HexStringToBytes(`0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272`+
+		expected := HexStringToBytes(`0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272` +
 			`a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f`)
 
-		result :=RepeatingKeyXOR([]byte(input), []byte("ICE"))
+		result := RepeatingKeyXOR([]byte(input), []byte("ICE"))
 
 		Expect(result).To(Equal(expected))
 	})
@@ -52,11 +54,29 @@ var _ = Describe("GetNumSetBits", func() {
 
 var _ = Describe("HammingDistance", func() {
 	It("calculates the Hamming distance between two strings", func() {
-		Expect(HammingDistance("this is a test", "wokka wokka!!!")).To(Equal(37))
+		Expect(HammingDistance([]byte("this is a test"), []byte("wokka wokka!!!"))).To(Equal(37))
 	})
 })
 
+var _ = Describe("GuessKeySize", func() {
+	It("returns the top 3 most likely key sizes", func() {
+		ciphertext, err := ioutil.ReadFile("repeating_key_xor.txt")
+		Expect(err).NotTo(HaveOccurred())
 
+		result := GuessKeySize(ciphertext)
+
+		Expect(result).To(Equal([]int{15, 3, 38}))
+	})
+})
+
+var _ = Describe("BreakRepeatingKeyXOR", func() {
+	It("foos", func() {
+		ciphertext, err := ioutil.ReadFile("repeating_key_xor.txt")
+		Expect(err).NotTo(HaveOccurred())
+
+		BreakRepeatingKeyXOR(ciphertext, 15)
+	})
+})
 
 func slicesToString(input [][]byte) (result []string) {
 	for _, slice := range input {

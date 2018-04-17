@@ -7,9 +7,9 @@ import (
 
 const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func HammingDistance(input1, input2 string) int {
+func HammingDistance(input1, input2 []byte) int {
 	var count int
-	xor := FixedXOR([]byte(input1), []byte(input2))
+	xor := FixedXOR(input1, input2)
 	for _, byte := range xor {
 		count += GetNumSetBits(int(byte))
 	}
